@@ -1,0 +1,335 @@
+% Báo cáo bài thực hành 1 - Lập trình Web (INT1434)
+% Biên dịch: pdflatex bao_cao.tex (chạy 2 lần để cập nhật mục lục)
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T5]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese]{babel}
+\usepackage[a4paper,top=2.6cm,bottom=2.6cm,left=2.7cm,right=2.7cm]{geometry}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{framed}
+
+% Ghi chú kiểu blockquote của Markdown: vạch đứng bên trái, chữ nghiêng màu xám
+\newenvironment{mdquote}{%
+  \def\FrameCommand{{\color{gray!55}\vrule width 3pt}\hspace{10pt}}%
+  \MakeFramed{\advance\hsize-\width\FrameRestore}\itshape\color{black!65}}%
+  {\endMakeFramed}
+\newcommand{\mdnote}[1]{\begin{mdquote}#1\end{mdquote}}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue
+}
+
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\arraystretch}{1.25}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\setlist[itemize]{topsep=2pt,itemsep=2pt,parsep=0pt,leftmargin=1.1cm}
+\setlist[enumerate]{topsep=2pt,itemsep=2pt,parsep=0pt,leftmargin=1.1cm}
+\captionsetup{font=small}
+\sloppy
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+% Header / footer: mã sinh viên ở chân trang
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Lập trình Web -- Bài thực hành 1}
+\fancyhead[R]{\small InfoSound}
+\fancyfoot[L]{\small B23DCAT004}
+\fancyfoot[C]{\small Chử Đức Anh}
+\fancyfoot[R]{\small Trang \thepage/\pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Mỗi chức năng: phần "Hiển thị" và "Công nghệ"
+\newcommand{\hienthi}[1]{\textbf{Hiển thị.} #1\par}
+\newcommand{\congnghe}[1]{\textbf{Công nghệ.} #1\par}
+
+% Ảnh chụp màn hình: vừa chiều rộng, giới hạn chiều cao cho ảnh chụp cả trang
+\newcommand{\screenshot}[3][0.62]{%
+  \begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.96\textwidth,height=#1\textheight,keepaspectratio]{#2}}
+    \caption{#3}
+  \end{figure}
+  \FloatBarrier}
+
+\graphicspath{{../poc_image/}{./}}
+
+\begin{document}
+
+\pagenumbering{gobble}
+\begin{titlepage}
+  \centering
+  \vspace*{1.1cm}
+
+  {\Large\bfseries HỌC VIỆN CÔNG NGHỆ BƯU CHÍNH VIỄN THÔNG\par}
+  \vspace{0.3cm}
+  {\large\bfseries KHOA AN TOÀN THÔNG TIN\par}
+
+  \vspace{1.3cm}
+  \includegraphics[width=3.4cm]{logo-ptit.png}
+
+  \vspace{1.6cm}
+  \rule{0.88\textwidth}{0.6pt}
+  \vspace{0.65cm}
+
+  {\LARGE\bfseries BÁO CÁO BÀI THỰC HÀNH 1\par}
+  \vspace{0.25cm}
+  {\LARGE\bfseries HỌC PHẦN LẬP TRÌNH WEB\par}
+  \vspace{0.25cm}
+  {\LARGE\bfseries ĐỀ TÀI: INFOSOUND\par}
+  \vspace{0.3cm}
+  {\large\itshape Giao diện nền tảng chia sẻ và nghe nhạc cộng đồng bằng ReactJS\par}
+
+  \vspace{0.65cm}
+  \rule{0.88\textwidth}{0.6pt}
+
+  \vspace{1.4cm}
+  {\large
+  \begin{tabular}{@{}ll@{}}
+    Sinh viên thực hiện: & \textbf{Chử Đức Anh} \\
+    Mã sinh viên:        & \textbf{B23DCAT004} \\
+    Học phần:            & Lập trình Web (INT1434) \\
+  \end{tabular}\par}
+
+  \vfill
+  {\itshape Hà Nội, ngày 23 tháng 9 năm 2026\par}
+\end{titlepage}
+
+\clearpage
+\pagenumbering{arabic}
+\tableofcontents
+\newpage
+
+% =====================================================================
+\section{Tổng quan}
+
+\textbf{InfoSound} là giao diện frontend cho một nền tảng chia sẻ và nghe nhạc cộng đồng, lấy cảm hứng từ các dịch vụ như SoundCloud. Người dùng có thể nghe nhạc, theo dõi nghệ sĩ, tạo và lưu playlist, bình luận theo từng giây của bài hát và tải lên bản thu của mình. Ứng dụng gồm \textbf{10 trang} và một trang 404, được xây dựng hoàn toàn bằng \textbf{ReactJS}.
+
+Điểm nhấn của giao diện là \textbf{dạng sóng (waveform) tương tác}: bấm vào dạng sóng để tua, di chuột để xem trước thời điểm, và bình luận của người nghe được gắn theo từng giây, hiện thành các chấm màu vàng ngay dưới dạng sóng.
+
+Dữ liệu minh hoạ sử dụng các nghệ sĩ và bài hát EDM có thật (Martin Garrix, Kygo, Gryffin, DEAMN, Alan Walker, Avicii, ILLENIUM, Zedd); số lượt nghe, lượt thích, lượt đăng lại là số giả lập. Người dùng đang đăng nhập trong bản demo là \textbf{Chử Đức Anh} (@chuducanh).
+
+\textbf{Mục tiêu của bài thực hành:}
+\begin{itemize}
+  \item Xây dựng giao diện hoàn chỉnh gồm 10 trang bằng ReactJS, có điều hướng giữa các trang.
+  \item Tổ chức mã nguồn theo thành phần (component) dùng lại được, quản lý trạng thái dùng chung bằng Context API.
+  \item Giao diện responsive từ điện thoại đến desktop, hỗ trợ chế độ sáng/tối và điều hướng bằng bàn phím.
+\end{itemize}
+
+% =====================================================================
+\section{Công nghệ và kiến trúc}
+
+\subsection{Công nghệ sử dụng}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{L{3.6cm}C{2cm}Y}
+\toprule
+\textbf{Thành phần} & \textbf{Phiên bản} & \textbf{Vai trò}\\
+\midrule
+React / React DOM & 19.3 & Thư viện xây dựng giao diện theo component, hooks (\texttt{useState}, \texttt{useEffect}, \texttt{useMemo}, \texttt{useRef}), Context API\\
+React Router DOM & 7.18 & Định tuyến phía client bằng \texttt{HashRouter}, đọc tham số qua \texttt{useParams}, \texttt{useSearchParams}\\
+Vite & 8.3 & Máy chủ phát triển có hot reload và công cụ build production\\
+lucide-react & 1.47 & Bộ biểu tượng dạng SVG (play, heart, repost, \ldots)\\
+CSS thuần & -- & Design token bằng biến CSS, Flexbox/Grid, media query; không dùng framework CSS\\
+oxlint & 1.81 & Kiểm tra lỗi và quy ước mã nguồn\\
+\bottomrule
+\end{tabularx}
+\caption{Công nghệ và thư viện sử dụng}
+\end{table}
+\FloatBarrier
+
+\subsection{Cấu trúc thư mục}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{L{3cm}Y}
+\toprule
+\textbf{Thư mục} & \textbf{Nội dung}\\
+\midrule
+\texttt{components/} & Thành phần dùng lại: \texttt{Header}, \texttt{PlayerBar}, \texttt{Waveform}, \texttt{TrackRow}, \texttt{TrackTile}, \texttt{PlaylistTile}, \texttt{ArtistCard}, \texttt{Tabs}, \texttt{Cover}, \ldots\\
+\texttt{context/} & \texttt{PlayerContext} (trình phát giả lập), \texttt{LibraryContext} (bài đã thích, đăng lại, theo dõi, playlist đã lưu, giao diện sáng/tối)\\
+\texttt{data/} & \texttt{mock.js}: dữ liệu nghệ sĩ, bài hát, playlist, bảng tin, bình luận và các hàm truy vấn\\
+\texttt{pages/} & 10 trang chính và trang 404\\
+\texttt{styles/} & \texttt{tokens.css} (màu, font, bo góc), \texttt{base.css}, \texttt{components.css}, \texttt{pages.css}\\
+\texttt{utils/} & \texttt{format.js}: định dạng thời gian, số lượt nghe, sinh dạng sóng theo seed\\
+\bottomrule
+\end{tabularx}
+\caption{Cấu trúc thư mục \texttt{src/}}
+\end{table}
+\FloatBarrier
+
+\subsection{Định tuyến và bố cục chung}
+
+Ứng dụng dùng \texttt{HashRouter} để khi deploy lên máy chủ tĩnh (ví dụ GitHub Pages) không bị lỗi 404 khi tải lại trang. Trang đăng nhập nằm ngoài bố cục chung; các trang còn lại được lồng trong component \texttt{Layout} thông qua \texttt{<Outlet />}, gồm thanh điều hướng phía trên (logo, menu, ô tìm kiếm, thông báo, menu tài khoản) và thanh phát nhạc cố định phía dưới (phát/tạm dừng, chuyển bài, trộn, lặp, âm lượng).
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{C{1cm}L{3.6cm}L{3.2cm}Y}
+\toprule
+\textbf{STT} & \textbf{Trang} & \textbf{Đường dẫn} & \textbf{Component}\\
+\midrule
+1 & Trang chủ & \texttt{/} & \texttt{Home.jsx}\\
+2 & Bảng tin & \texttt{/feed} & \texttt{Feed.jsx}\\
+3 & Tìm kiếm & \texttt{/search?q=} & \texttt{Search.jsx}\\
+4 & Chi tiết bài hát & \texttt{/track/:id} & \texttt{Track.jsx}\\
+5 & Hồ sơ nghệ sĩ & \texttt{/artist/:id} & \texttt{Artist.jsx}\\
+6 & Playlist & \texttt{/playlist/:id} & \texttt{Playlist.jsx}\\
+7 & Thư viện & \texttt{/library} & \texttt{Library.jsx}\\
+8 & Tải lên & \texttt{/upload} & \texttt{Upload.jsx}\\
+9 & Đăng nhập / Đăng ký & \texttt{/auth} & \texttt{Auth.jsx}\\
+10 & Cài đặt & \texttt{/settings} & \texttt{Settings.jsx}\\
+\bottomrule
+\end{tabularx}
+\caption{Danh sách trang và đường dẫn}
+\end{table}
+\FloatBarrier
+
+% =====================================================================
+\section{Các chức năng đã xây dựng}
+
+\subsection{Trang chủ}
+
+\hienthi{Bài hát được nghe nhiều nhất tuần (\textit{Scared to Be Lonely} -- Martin Garrix) với ảnh bìa, số lượt nghe và dạng sóng lớn có các chấm bình luận; bảng xếp hạng tuần 8 bài lọc được theo thể loại (Big room, Future bass, Tropical house, Progressive house, Electro house); lưới thể loại, playlist tuyển chọn, bài mới đăng và danh sách nghệ sĩ kèm nút theo dõi.}
+\congnghe{Component \texttt{Home} dùng \texttt{useState} lưu thể loại đang chọn và lọc mảng \texttt{chart} ngay khi render. Dạng sóng là component \texttt{Waveform} vẽ bằng SVG, số cột tự điều chỉnh theo chiều rộng nhờ \texttt{ResizeObserver}. Bố cục bảng xếp hạng và các lưới dùng CSS Grid; liên kết giữa các trang dùng \texttt{<Link>} của React Router.}
+
+\screenshot[0.66]{trang_chu.png}{Trang chủ}
+
+\subsection{Bảng tin}
+
+\hienthi{Dòng thời gian các bài đăng mới và bài đăng lại từ những nghệ sĩ người dùng đang theo dõi (Martin Garrix, Kygo, Gryffin, Avicii), mỗi mục có dạng sóng, nút thích, đăng lại, sao chép liên kết. Tab lọc \textit{Tất cả / Bài đăng mới / Đăng lại}; cột bên phải gợi ý nghệ sĩ nên theo dõi và danh sách nghe gần đây.}
+\congnghe{Dữ liệu \texttt{feed} được lọc theo tab bằng \texttt{useState}; danh sách đang theo dõi lấy từ \texttt{LibraryContext}, lịch sử nghe lấy từ \texttt{PlayerContext} qua các hook \texttt{useLibrary()} và \texttt{usePlayer()}. Component \texttt{Tabs} và \texttt{TrackRow} được dùng lại ở nhiều trang. Bố cục hai cột dùng CSS Grid, tự chuyển thành một cột trên màn hình nhỏ.}
+
+\screenshot[0.66]{bang_tin.png}{Bảng tin}
+\mdnote{Ghi chú: do trang dài theo chiều dọc nên ảnh chụp toàn trang bằng ứng dụng bị lỗi hiển thị một chút, mong thầy thông cảm :D}
+
+\subsection{Tìm kiếm}
+
+\hienthi{Kết quả tìm kiếm theo tên bài, nghệ sĩ, thể loại và thẻ, chia thành các nhóm Bài hát / Nghệ sĩ / Playlist kèm tổng số kết quả; hàng chip lọc theo thể loại. Khi chưa nhập từ khoá, trang hiển thị gợi ý tìm kiếm và lưới thể loại; khi không có kết quả, hiển thị trạng thái trống.}
+\congnghe{Từ khoá và thể loại được lưu trên URL bằng \texttt{useSearchParams} nên có thể chia sẻ đường dẫn kết quả. Chuỗi được chuẩn hoá bằng \texttt{String.normalize('NFD')} và bỏ dấu, nhờ đó gõ \textit{``khong dau''} vẫn tìm được nội dung có dấu. Kết quả được tính trong \texttt{useMemo} để chỉ tính lại khi từ khoá hoặc thể loại thay đổi.}
+
+\screenshot{tim_kiem.png}{Trang tìm kiếm}
+
+\subsection{Chi tiết bài hát}
+
+\hienthi{Ảnh bìa, tên bài, nghệ sĩ, thể loại và dạng sóng lớn có các bình luận gắn theo từng giây; ô viết bình luận tại đúng thời điểm đang nghe; thống kê lượt nghe, thích, đăng lại; mô tả, thẻ, các playlist chứa bài, danh sách bình luận và bài hát liên quan (cùng nghệ sĩ, cùng thể loại).}
+\congnghe{Id bài hát đọc từ URL bằng \texttt{useParams}. Bấm vào dạng sóng gọi hàm \texttt{seek()} của \texttt{PlayerContext} để tua; vị trí bình luận được tính theo tỉ lệ \texttt{giây / thời lượng}. Bình luận mới được thêm vào state cục bộ bằng \texttt{useState}; \texttt{useRef} và \texttt{scrollIntoView} dùng để cuộn đến khung bình luận. Nút sao chép liên kết dùng \texttt{navigator.clipboard}.}
+
+\screenshot{chi_tiet_bai_hat.png}{Chi tiết bài hát}
+\mdnote{Ghi chú: do trang dài theo chiều dọc nên ảnh chụp toàn trang bằng ứng dụng bị lỗi hiển thị một chút, mong thầy thông cảm :D}
+
+\subsection{Hồ sơ nghệ sĩ}
+
+\hienthi{Ảnh bìa hoạ tiết dạng sóng riêng của từng nghệ sĩ, ảnh đại diện, huy hiệu xác minh, nơi sống, số người theo dõi, đang theo dõi và số bài hát; nút theo dõi; các tab \textit{Tất cả / Nổi bật / Playlist / Đăng lại}; cột phải là phần giới thiệu và nghệ sĩ tương tự.}
+\congnghe{Id nghệ sĩ lấy từ \texttt{useParams}, các hàm truy vấn \texttt{tracksByArtist}, \texttt{playlistsByArtist} lọc dữ liệu tương ứng. Ảnh bìa là SVG sinh từ \texttt{makePeaks()} với seed là id nghệ sĩ nên mỗi hồ sơ có hoạ tiết riêng và cố định. Trạng thái theo dõi được đồng bộ toàn ứng dụng qua \texttt{LibraryContext}.}
+
+\screenshot{ho_so_nghe_si.png}{Hồ sơ nghệ sĩ}
+
+\subsection{Playlist}
+
+\hienthi{Ảnh bìa xếp chồng, tên playlist, mô tả, người tạo, số bài và tổng thời lượng; các nút \textit{Phát tất cả}, \textit{Trộn bài}, \textit{Lưu vào thư viện}; danh sách bài có số thứ tự, lượt nghe, nút thích và thời lượng; phía dưới gợi ý các playlist khác. Hình minh hoạ là playlist \textit{EDM để code đêm} do người dùng Chử Đức Anh tạo.}
+\congnghe{Nút \textit{Phát tất cả} đưa toàn bộ danh sách vào hàng đợi của \texttt{PlayerContext}; \textit{Trộn bài} bật chế độ shuffle. Trạng thái đã lưu được bật/tắt qua \texttt{toggleSavePlaylist} của \texttt{LibraryContext} và lưu vào \texttt{localStorage}. Tổng thời lượng được tính bằng \texttt{reduce} trên mảng bài hát.}
+
+\screenshot{playlist.png}{Trang playlist}
+
+\subsection{Thư viện}
+
+\hienthi{Thư viện cá nhân gồm các tab \textit{Tổng quan / Đã thích / Playlist / Đang theo dõi / Lịch sử} kèm số lượng; tab Tổng quan hiển thị nhanh bài đã thích, playlist đã lưu, nghệ sĩ đang theo dõi và bài vừa nghe; mỗi tab có trạng thái trống riêng khi chưa có dữ liệu.}
+\congnghe{Tab hiện tại lưu trên URL bằng \texttt{useSearchParams} (\texttt{?tab=likes}), nên có thể mở thẳng một tab. Danh sách đã thích, theo dõi, playlist đã lưu lấy từ \texttt{LibraryContext} và được ghi vào \texttt{localStorage} trong \texttt{useEffect}, nên vẫn giữ nguyên khi tải lại trang; lịch sử nghe lấy từ \texttt{PlayerContext}.}
+
+\screenshot[0.66]{thu_vien.png}{Thư viện}
+
+\subsection{Tải lên}
+
+\hienthi{Vùng kéo thả tệp âm thanh với hướng dẫn định dạng (MP3, WAV, FLAC, AIFF, OGG, M4A, tối đa 200 MB) và nút chọn tệp từ máy. Sau khi chọn tệp, biểu mẫu nhập tên bài, thể loại, thẻ (tối đa 5), mô tả và quyền riêng tư (công khai/riêng tư) hiện ra, có thông báo lỗi cho trường bắt buộc và màn hình xác nhận khi tải lên thành công.}
+\congnghe{Kéo thả dùng các sự kiện HTML5 \texttt{onDragOver}, \texttt{onDragLeave}, \texttt{onDrop} và \texttt{dataTransfer.files}; nút chọn tệp gọi \texttt{<input type="file">} ẩn qua \texttt{useRef}. Định dạng và dung lượng được kiểm tra phía client trước khi hiện biểu mẫu. Biểu mẫu là controlled component với \texttt{useState}, lỗi được thông báo qua \texttt{role="alert"}.}
+
+\screenshot{upload.png}{Trang tải lên}
+
+\subsection{Đăng nhập / Đăng ký}
+
+\hienthi{Màn hình chia đôi: nửa trái là hình minh hoạ dạng sóng theo nhận diện InfoSound; nửa phải là biểu mẫu với tab chuyển giữa \textit{Đăng nhập} và \textit{Tạo tài khoản}, nút tiếp tục với Google, ô email, mật khẩu có nút ẩn/hiện, liên kết quên mật khẩu và thông báo lỗi dưới từng ô.}
+\congnghe{Chế độ và dữ liệu nhập được quản lý bằng \texttt{useState}. Email kiểm tra bằng biểu thức chính quy, mật khẩu yêu cầu tối thiểu 8 ký tự; biểu mẫu tắt kiểm tra mặc định của trình duyệt (\texttt{noValidate}) để hiển thị lỗi tiếng Việt thống nhất. Đăng nhập hợp lệ chuyển về trang chủ bằng \texttt{useNavigate}. Trang này nằm ngoài \texttt{Layout} nên không có thanh điều hướng và trình phát.}
+
+\screenshot{auht.png}{Trang đăng nhập / đăng ký}
+
+\subsection{Cài đặt}
+
+\hienthi{Menu bên trái gồm \textit{Tài khoản / Giao diện / Thông báo / Quyền riêng tư}. Mục Tài khoản hiển thị hồ sơ công khai của người dùng Chử Đức Anh: ảnh đại diện, tên hiển thị, tên người dùng, nơi sống, email (khoá, không sửa được) và phần giới thiệu có bộ đếm ký tự. Các mục còn lại là lựa chọn giao diện Sáng/Tối/Theo hệ thống và các công tắc bật tắt thông báo, quyền riêng tư.}
+\congnghe{Chế độ giao diện lưu trong \texttt{LibraryContext}, áp dụng bằng thuộc tính \texttt{data-theme} trên thẻ \texttt{<html>}; chế độ theo hệ thống lắng nghe \texttt{window.matchMedia('(prefers-color-scheme: dark)')}. Toàn bộ màu sắc là biến CSS nên đổi giao diện không cần tải lại trang. Khi lưu, thông báo \textit{Đã lưu thay đổi} hiện ra và tự ẩn sau 2,2 giây nhờ \texttt{setTimeout} trong \texttt{useEffect}.}
+
+\screenshot{profile.png}{Trang cài đặt}
+
+% =====================================================================
+\section{Một số điểm kỹ thuật}
+
+\begin{itemize}
+  \item \textbf{Trình phát giả lập:} không phát âm thanh thật; tiến độ tăng mỗi giây bằng \texttt{setInterval} trong \texttt{PlayerContext}, nhờ đó dạng sóng, thanh phát và bình luận theo thời gian phản hồi như một trình phát thật. Hỗ trợ hàng đợi, trộn bài, lặp lại, âm lượng và lịch sử nghe.
+  \item \textbf{Ảnh bìa và dạng sóng sinh theo seed:} dùng bộ sinh số ngẫu nhiên có seed từ id của bài hát/nghệ sĩ, vẽ bằng SVG, nên không cần tải ảnh bên ngoài và kết quả giống nhau ở mọi lần tải.
+  \item \textbf{Quản lý trạng thái:} hai Context tách biệt -- \texttt{PlayerContext} cho việc phát nhạc, \texttt{LibraryContext} cho dữ liệu cá nhân -- giúp mọi trang dùng chung trạng thái mà không phải truyền props qua nhiều cấp.
+  \item \textbf{Responsive và trợ năng:} bố cục co giãn qua các mốc 1080px, 860px, 600px; có liên kết \textit{Bỏ qua đến nội dung}, thuộc tính \texttt{aria-*}, \texttt{role} cho tab, slider, switch và tôn trọng \texttt{prefers-reduced-motion}.
+\end{itemize}
+
+\subsection{Lỗi đã gặp và cách khắc phục}
+
+Khi chạy \texttt{npm run dev}, trang hiển thị trắng và console báo lỗi \texttt{Uncaught TypeError: destroy is not a function}. Nguyên nhân là effect trong \texttt{Layout.jsx} được viết dạng rút gọn:
+
+\begin{verbatim}
+useEffect(() => window.scrollTo(0, 0), [pathname]);
+\end{verbatim}
+
+Arrow function rút gọn tự trả về kết quả của \texttt{window.scrollTo()}; trên các phiên bản Chromium/Edge mới, hàm này trả về một \texttt{Promise}. React coi giá trị trả về của effect là hàm dọn dẹp (cleanup), và ở chế độ phát triển \texttt{StrictMode} gọi cleanup ngay nên ứng dụng bị lỗi. Cách sửa là đặt thân hàm trong ngoặc nhọn để effect không trả về gì:
+
+\begin{verbatim}
+useEffect(() => {
+  window.scrollTo(0, 0);
+}, [pathname]);
+\end{verbatim}
+
+% =====================================================================
+\section{Thiết kế giao diện}
+
+\begin{itemize}
+  \item \textbf{Màu sắc:} xanh ultramarine \texttt{\#2E3BFF} cho tín hiệu (đang phát, nút chính); vàng băng cassette \texttt{\#FFC53D} cho bình luận và điểm nhấn; nền xám lam \texttt{\#ECEEF6}.
+  \item \textbf{Phông chữ:} Bricolage Grotesque cho tiêu đề, Be Vietnam Pro cho nội dung (hỗ trợ đầy đủ tiếng Việt), tải từ Google Fonts.
+  \item \textbf{Bố cục:} tham khảo các mẫu thiết kế nền tảng âm nhạc trên Figma Community và các dịch vụ nghe nhạc trực tuyến, sau đó thiết kế lại với nhận diện riêng.
+\end{itemize}
+
+% =====================================================================
+\section{Hướng dẫn chạy}
+
+Yêu cầu Node.js 20 trở lên.
+\begin{verbatim}
+npm install
+npm run dev      # mở http://localhost:5173
+npm run build    # build bản production vào thư mục dist/
+\end{verbatim}
+
+\end{document}

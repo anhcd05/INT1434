@@ -1,0 +1,57 @@
+/* ===== InfoSound design tokens =====
+   Ultramarine (tín hiệu) + vàng băng cassette (bình luận, điểm nhấn) trên nền xám lam.
+   Bo góc theo cấp: bìa 6px, thẻ 12px, khối lớn 20px, nút dạng viên thuốc. */
+:root {
+  --bg: #eceef6;
+  --surface: #ffffff;
+  --surface-2: #f5f6fb;
+  --ink: #161836;
+  --ink-2: #464a70;
+  --muted: #767a9c;
+  --line: #dadded;
+  --signal: #2e3bff;
+  --signal-hover: #1f2be0;
+  --signal-ink: #ffffff;
+  --signal-soft: #e2e5ff;
+  --tape: #ffc53d;
+  --tape-ink: #3a2a00;
+  --like: #e0364b;
+  --danger: #c8283d;
+  --wave-idle: #c3c7dc;
+  --wave-hover: #8f97ff;
+  --band: #161836;
+  --band-ink: #f1f2ff;
+
+  --r-cover: 6px;
+  --r-card: 12px;
+  --r-panel: 20px;
+  --r-pill: 999px;
+
+  --font-display: 'Bricolage Grotesque', 'Be Vietnam Pro', system-ui, sans-serif;
+  --font-body: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --header-h: 64px;
+  --player-h: 72px;
+  --page-w: 1240px;
+  --shadow-pop: 0 12px 32px -12px rgb(22 24 54 / 0.35);
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #0f1026;
+  --surface: #181a37;
+  --surface-2: #20234a;
+  --ink: #eceeff;
+  --ink-2: #bfc3e6;
+  --muted: #8c91b9;
+  --line: #2c2f5c;
+  --signal: #6f79ff;
+  --signal-hover: #858eff;
+  --signal-ink: #0f1026;
+  --signal-soft: #262b66;
+  --wave-idle: #383c6e;
+  --wave-hover: #5560d8;
+  --band: #20234a;
+  --shadow-pop: 0 12px 32px -12px rgb(0 0 0 / 0.6);
+  color-scheme: dark;
+}
