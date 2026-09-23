@@ -9,3 +9,7 @@ dist/
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
+# Báo cáo và ảnh chụp chỉ giữ trên máy
+bao_cao/
+poc_image/
